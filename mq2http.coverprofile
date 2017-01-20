@@ -1,0 +1,13 @@
+mode: atomic
+github.com/king-jam/mq2http/jsonrpc.go:45.45,49.25 4 0
+github.com/king-jam/mq2http/jsonrpc.go:52.2,58.8 2 0
+github.com/king-jam/mq2http/jsonrpc.go:49.25,51.3 1 0
+github.com/king-jam/mq2http/jsonrpc.go:61.47,63.2 1 0
+github.com/king-jam/mq2http/jsonrpc.go:64.35,66.2 1 0
+github.com/king-jam/mq2http/jsonrpc.go:68.32,70.2 1 0
+github.com/king-jam/mq2http/jsonrpc.go:72.36,74.2 1 0
+github.com/king-jam/mq2http/request.go:16.58,18.16 2 0
+github.com/king-jam/mq2http/request.go:21.2,21.33 1 0
+github.com/king-jam/mq2http/request.go:24.2,24.17 1 0
+github.com/king-jam/mq2http/request.go:18.16,20.3 1 0
+github.com/king-jam/mq2http/request.go:21.33,23.3 1 0

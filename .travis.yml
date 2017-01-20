@@ -1,0 +1,16 @@
+language: go
+
+go:
+  - 1.7.x
+
+services:
+  - rabbitmq
+
+env:
+
+before_install:
+  - make deps
+
+script:
+  - make unit-test
+  - make integration-test
