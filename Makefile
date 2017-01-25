@@ -13,8 +13,5 @@ integration-test:
 unit-test:
 	ginkgo -r -race -trace -cover -randomizeAllSpecs --slowSpecThreshold=30 --focus="\bUNIT\b" -v
 
-cover-cmd: test
-	go tool cover -html=cmd/cmd.coverprofile
-
 build:
 	go build -o $(GOOUT)/$(BINARYNAME)

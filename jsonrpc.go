@@ -12,27 +12,33 @@ import (
 This is a psuedo custom JSON-RPC struct used for this
 {
         "jsonrpc": "2.0",
-        "method": "POST /v1/test/route/idthing",
+        "method": "GET /v1/nodes",
         "params": {
-                "body": "<encoded JSON body>",
+                "body": "",
                 "headers": {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
+                        "Content-Type": "application/json"
 		}
         },
         "id": "1238814hnfasdf1afdf"
 }
 */
 type JSONRPCRequest struct {
-	Version string       `json: "jsonrpc"`
-	Method  string       `json: "method"`
-	Params  ParamsStruct `json: "params,omitempty"`
-	ID      string       `json: "id"`
+	Version string          `json: "jsonrpc"`
+	Method  string          `json: "method"`
+	Params  ReqParamsStruct `json: "params,omitempty"`
+	ID      string          `json: "id,omitempty"`
 }
 
-type ParamsStruct struct {
+type ReqParamsStruct struct {
 	Body    string            `json: "body"`
 	Headers map[string]string `json: "headers"`
+}
+
+type JSONRPCResponse struct {
+	Version string `json: "jsonrpc"`
+	Result  string `json: "result,omitempty"`
+	Error   string `json: "error,omitempty"`
+	ID      string `json: "id,emitempty"`
 }
 
 type JSONRPC struct {
