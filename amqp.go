@@ -1,29 +1,44 @@
 package mq2http
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
+
 	log "github.com/sirupsen/logrus"
 	samqp "github.com/streadway/amqp"
-	"net/http"
 )
 
+// AMQPRPCSettings is ...
+type AMQPRPCSettings struct {
+	Exchange     string
+	ExchangeType string
+	QueueName    string
+	BindingKey   string
+	ConsumerTag  string
+}
+
+// AMQPWriter is ...
 type AMQPWriter struct {
 	ReplyTo       string
 	CorrelationID string
 	Exchange      string
 	ExchangeType  string
 	AMQPConn      *samqp.Connection
+	Headers       map[string][]string
+	Status        int
 }
 
+// Header is ...
 func (w AMQPWriter) Header() http.Header {
-	header := make(map[string][]string)
-	return header
+	return w.Headers
 }
 
+// Write is ...
 func (w AMQPWriter) Write(body []byte) (int, error) {
 	exchangeType := w.ExchangeType
 	exchange := w.Exchange
-	correlationId := w.CorrelationID
+	correlationID := w.CorrelationID
 	replyTo := w.ReplyTo
 	channel, err := w.AMQPConn.Channel()
 	if err != nil {
@@ -43,6 +58,28 @@ func (w AMQPWriter) Write(body []byte) (int, error) {
 		if err != nil {
 			return 0, fmt.Errorf("failed to declare exhange: %s", err)
 		}*/
+	respParamsStruct := RespParamsStruct{
+		Status:        http.StatusText(w.Status),
+		StatusCode:    w.Status,
+		Header:        w.Headers,
+		Body:          string(body),
+		ContentLength: int64(len(body)),
+		Close:         false,
+		Uncompressed:  true,
+		Request:       nil,
+	}
+
+	jsonRPC := JSONRPCResponse{
+		Version: "2.0",
+		Result:  respParamsStruct,
+		Error:   string(w.Status),
+		ID:      correlationID,
+	}
+
+	jsonRPCBody, err := json.Marshal(jsonRPC)
+	if err != nil {
+		return 0, err
+	}
 
 	log.Debugf("publishing %dB body (%q)", len(body), body)
 	err = channel.Publish(
@@ -54,9 +91,9 @@ func (w AMQPWriter) Write(body []byte) (int, error) {
 			Headers:         samqp.Table{},
 			ContentType:     "text/plain",
 			ContentEncoding: "",
-			CorrelationId:   correlationId,
+			CorrelationId:   correlationID,
 			ReplyTo:         replyTo,
-			Body:            []byte(body),
+			Body:            jsonRPCBody,
 			DeliveryMode:    samqp.Transient, // 1=non-persistent, 2=persistent
 			Priority:        0,               // 0-9
 		},
@@ -67,9 +104,12 @@ func (w AMQPWriter) Write(body []byte) (int, error) {
 	return len(body), nil
 }
 
+// WriteHeader is ...
 func (w AMQPWriter) WriteHeader(status int) {
+	w.Status = status
 }
 
+// AMQPFactory is ...
 func AMQPFactory(ReplyTo, Exchange, ExchangeType, CorrelationID string, AMQPConn *samqp.Connection) (AMQPWriter, error) {
 	return AMQPWriter{
 		ReplyTo:       ReplyTo,
@@ -77,5 +117,7 @@ func AMQPFactory(ReplyTo, Exchange, ExchangeType, CorrelationID string, AMQPConn
 		Exchange:      Exchange,
 		ExchangeType:  ExchangeType,
 		AMQPConn:      AMQPConn,
+		// Headers       map[string][]string
+		// Status        int
 	}, nil
 }

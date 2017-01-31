@@ -6,15 +6,17 @@ import (
 	"net/http"
 )
 
+// RequestWriter is ...
 type RequestWriter interface {
 	Headers() map[string]string
 	Method() string
 	URL() string
-	Body() io.Reader
+	Reader() io.Reader
 }
 
+// NewRequest is ...
 func NewRequest(rw RequestWriter) (*http.Request, error) {
-	req, err := http.NewRequest(rw.Method(), rw.URL(), rw.Body())
+	req, err := http.NewRequest(rw.Method(), rw.URL(), rw.Reader())
 	if err != nil {
 		return req, fmt.Errorf("Failed to create base request")
 	}

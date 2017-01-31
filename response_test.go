@@ -7,8 +7,8 @@ import (
 	//	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("HTTP Response Interface", func() {
-	Context("Should be able to create a new response", func() {
+var _ = Describe("HTTP Request Interface", func() {
+	Context("Should be able to create a new request", func() {
 		It("UNIT can", func() {
 		})
 	})
