@@ -1,2 +1,2 @@
 # mq2http
-AMQP-to-HTTP Libary in Go
+AMQP-to-HTTP-to-AMQP Libary in Go
