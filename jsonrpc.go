@@ -63,8 +63,8 @@ type JSONRPCRequest struct {
 
 // ReqParamsStruct is ...
 type ReqParamsStruct struct {
-	Body    string              `json:"body"`
-	Headers map[string][]string `json:"headers"`
+	Body    string            `json:"body"`
+	Headers map[string]string `json:"headers"`
 }
 
 // JSONRPCResponse is ...
@@ -124,7 +124,7 @@ func (j *JSONRPCResponseReader) Reader() io.ReadCloser {
 
 // JSONRPCRequestReader is ...
 type JSONRPCRequestReader struct {
-	headers map[string][]string
+	headers map[string]string
 	method  string
 	url     string
 	reader  io.Reader
@@ -148,7 +148,7 @@ func NewJSONRPCRequestReader(b []byte) (*JSONRPCRequestReader, error) {
 }
 
 // Headers is ...
-func (j *JSONRPCRequestReader) Headers() map[string][]string {
+func (j *JSONRPCRequestReader) Headers() map[string]string {
 	return j.headers
 }
 
