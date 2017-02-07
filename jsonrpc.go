@@ -77,10 +77,11 @@ type JSONRPCResponse struct {
 
 // JSONRPCResponseReader is ...
 type JSONRPCResponseReader struct {
-	status     string
-	statusCode int
-	headers    map[string][]string
-	reader     io.ReadCloser
+	status        string
+	statusCode    int
+	headers       map[string][]string
+	reader        io.ReadCloser
+	contentLength int64
 }
 
 // NewJSONRPCResponseReader is ...
@@ -91,10 +92,11 @@ func NewJSONRPCResponseReader(b []byte) (*JSONRPCResponseReader, error) {
 	r := bytes.NewReader([]byte(resp.Result.Body))
 	rc := ioutil.NopCloser(r)
 	return &JSONRPCResponseReader{
-		status:     resp.Result.Status,
-		statusCode: resp.Result.StatusCode,
-		headers:    resp.Result.Header,
-		reader:     rc,
+		status:        resp.Result.Status,
+		statusCode:    resp.Result.StatusCode,
+		headers:       resp.Result.Header,
+		reader:        rc,
+		contentLength: resp.Result.ContentLength,
 	}, nil
 }
 
@@ -120,6 +122,11 @@ func (j *JSONRPCResponseReader) Headers() http.Header {
 // Reader is ...
 func (j *JSONRPCResponseReader) Reader() io.ReadCloser {
 	return j.reader
+}
+
+// ContentLength is ...
+func (j *JSONRPCResponseReader) ContentLength() int64 {
+	return j.contentLength
 }
 
 // JSONRPCRequestReader is ...

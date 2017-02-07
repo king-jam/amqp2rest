@@ -13,7 +13,6 @@ import (
 type AMQPRPCSettings struct {
 	Exchange     string
 	ExchangeType string
-	QueueName    string
 	BindingKey   string
 	ConsumerTag  string
 }

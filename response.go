@@ -11,20 +11,21 @@ type ResponseWriter interface {
 	StatusCode() int
 	Headers() http.Header
 	Reader() io.ReadCloser
+	ContentLength() int64
 }
 
 // NewResponse is ...
 func NewResponse(rw ResponseWriter) (*http.Response, error) {
 
 	resp := http.Response{
-		Status:     rw.Status(),
-		StatusCode: rw.StatusCode(),
-		Header:     rw.Headers(),
-		Body:       rw.Reader(),
-		// ContentLength...
-		Close:        false,
-		Uncompressed: true,
-		Request:      nil,
+		Status:        rw.Status(),
+		StatusCode:    rw.StatusCode(),
+		Header:        rw.Headers(),
+		Body:          rw.Reader(),
+		ContentLength: rw.ContentLength(),
+		Close:         false,
+		Uncompressed:  true,
+		Request:       nil,
 	}
 
 	return &resp, nil
