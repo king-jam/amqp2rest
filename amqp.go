@@ -116,7 +116,7 @@ func AMQPFactory(ReplyTo, Exchange, ExchangeType, CorrelationID string, AMQPConn
 		Exchange:      Exchange,
 		ExchangeType:  ExchangeType,
 		AMQPConn:      AMQPConn,
-		// Headers       map[string][]string
-		// Status        int
+		Headers:       make(map[string][]string),
+		Status:        0,
 	}, nil
 }

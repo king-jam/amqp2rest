@@ -42,9 +42,9 @@ type RespParamsStruct struct {
 	// Proto string
 	// ProtoMajor int
 	// ProtoMinor int
-	Header        map[string][]string `json:"header"` // have this in amqp.go mq2http
-	Body          string              `json:"body"`
-	ContentLength int64               `json:"contentlength"` // = len(body)
+	Header        http.Header `json:"header"` // have this in amqp.go mq2http
+	Body          string      `json:"body"`
+	ContentLength int64       `json:"contentlength"` // = len(body)
 	//	TransferEncoding []string
 	Close        bool `json:"close"`        // always false
 	Uncompressed bool `json:"uncompressed"` // always true
@@ -63,8 +63,8 @@ type JSONRPCRequest struct {
 
 // ReqParamsStruct is ...
 type ReqParamsStruct struct {
-	Body    string            `json:"body"`
-	Headers map[string]string `json:"headers"`
+	Body    string      `json:"body"`
+	Headers http.Header `json:"headers"`
 }
 
 // JSONRPCResponse is ...
@@ -79,7 +79,7 @@ type JSONRPCResponse struct {
 type JSONRPCResponseReader struct {
 	status        string
 	statusCode    int
-	headers       map[string][]string
+	headers       http.Header
 	reader        io.ReadCloser
 	contentLength int64
 }
@@ -131,7 +131,7 @@ func (j *JSONRPCResponseReader) ContentLength() int64 {
 
 // JSONRPCRequestReader is ...
 type JSONRPCRequestReader struct {
-	headers map[string]string
+	headers http.Header
 	method  string
 	url     string
 	reader  io.Reader
@@ -155,7 +155,7 @@ func NewJSONRPCRequestReader(b []byte) (*JSONRPCRequestReader, error) {
 }
 
 // Headers is ...
-func (j *JSONRPCRequestReader) Headers() map[string]string {
+func (j *JSONRPCRequestReader) Headers() http.Header {
 	return j.headers
 }
 

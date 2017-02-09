@@ -8,7 +8,7 @@ import (
 
 // RequestWriter is ...
 type RequestWriter interface {
-	Headers() map[string]string
+	Headers() http.Header
 	Method() string
 	URL() string
 	Reader() io.Reader
@@ -20,8 +20,8 @@ func NewRequest(rw RequestWriter) (*http.Request, error) {
 	if err != nil {
 		return req, fmt.Errorf("Failed to create base request")
 	}
-	for k, v := range rw.Headers() {
-		req.Header.Set(k, v)
-	}
+	// for k, v := range rw.Headers() {
+	req.Header = rw.Headers()
+	// }
 	return req, nil
 }
