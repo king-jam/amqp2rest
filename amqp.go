@@ -82,10 +82,10 @@ func (w AMQPWriter) Write(body []byte) (int, error) {
 
 	log.Debugf("publishing %dB body (%q)", len(body), body)
 	err = channel.Publish(
-		"",      // publish to an exchange
-		replyTo, // routing to 0 or more queues
-		false,   // mandatory
-		false,   // immediate
+		exchange, // publish to an exchange
+		replyTo,  // routing to 0 or more queues
+		false,    // mandatory
+		false,    // immediate
 		samqp.Publishing{
 			Headers:         samqp.Table{},
 			ContentType:     "text/plain",
